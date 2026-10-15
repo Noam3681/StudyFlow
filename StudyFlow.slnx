@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DAL/DAL.csproj" />
+  <Project Path="Model/Model.csproj" />
+  <Project Path="StudyFlowAPI/StudyFlowAPI.csproj" />
+  <Project Path="View/View.csproj" />
+</Solution>

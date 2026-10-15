@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<header class="topbar sticky-top">
+    <div class="container d-flex align-items-center justify-content-between py-3">
+        <Logo />
+
+        <nav class="d-flex gap-2">
+            <a class="btn btn-outline-primary" href="login">כניסה</a>
+            <a class="btn btn-primary" href="register">הרשמה</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    @Body
+</main>
+
+<footer class="py-4 text-secondary small">
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+        <span>StudyFlow · לומדים חכם יותר</span>
+        <span>פרויקט גמר בהנדסת תוכנה</span>
+    </div>
+</footer>
+
+<div id="blazor-error-ui" data-nosnippet>
+    אירעה שגיאה.
+    <a href="." class="reload">רענון</a>
+    <span class="dismiss">🗙</span>
+</div>

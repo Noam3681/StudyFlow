@@ -1,0 +1,74 @@
+@StudyFlowAPI_HostAddress = http://localhost:5079
+
+
+### 1. Get all users
+GET {{StudyFlowAPI_HostAddress}}/api/users
+Accept: application/json
+
+
+### 2. Get user by id
+GET {{StudyFlowAPI_HostAddress}}/api/users/1
+Accept: application/json
+
+
+### 3. Check if username exists
+GET {{StudyFlowAPI_HostAddress}}/api/users/username-exists?username=admin
+Accept: application/json
+
+
+### 4. Check if email exists
+GET {{StudyFlowAPI_HostAddress}}/api/users/email-exists?email=admin@studyflow.com
+Accept: application/json
+
+
+### 5. Add test user
+POST {{StudyFlowAPI_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@studyflow.com",
+  "password": "Test123"
+}
+
+
+### 6. Login
+POST {{StudyFlowAPI_HostAddress}}/api/users/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123"
+}
+
+
+### 7. Count users by role
+GET {{StudyFlowAPI_HostAddress}}/api/users/count-by-role
+Accept: application/json
+
+
+### 8. Update user role
+PUT {{StudyFlowAPI_HostAddress}}/api/users/2/role
+Content-Type: application/json
+
+{
+  "role": "Admin"
+}
+
+
+### 9. Update password
+PUT {{StudyFlowAPI_HostAddress}}/api/users/2/password
+Content-Type: application/json
+
+{
+  "password": "NewPassword123"
+}
+
+
+### 10. Update email
+PUT {{StudyFlowAPI_HostAddress}}/api/users/2/email
+Content-Type: application/json
+
+{
+  "email": "student2new@studyflow.com"
+}

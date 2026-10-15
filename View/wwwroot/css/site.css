@@ -1,0 +1,112 @@
+﻿/* ---------- 1. צבעים וגופנים ---------- */
+:root {
+    --primary: #4F46E5;
+    --primary-dark: #3730A3;
+    --primary-light: #EEF2FF;
+    --secondary: #06B6D4;
+    --tertiary: #A54100;
+    --neutral: #1E293B;
+    --bs-primary: #4F46E5;
+    --bs-primary-rgb: 79, 70, 229;
+    --bs-link-color: #4F46E5;
+    --bs-link-hover-color: #3730A3;
+    --bs-body-bg: #F8FAFF;
+    --bs-body-color: #1E293B;
+    --bs-body-font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
+    --bs-border-radius: 12px;
+    --bs-border-radius-lg: 20px;
+}
+
+body {
+    font-family: 'Rubik', 'Heebo', system-ui, sans-serif;
+    background: #F8FAFF;
+}
+
+a {
+    color: var(--primary);
+}
+
+h1, h2, h3, h4, h5, h6, .btn {
+    font-family: 'Rubik', 'Heebo', sans-serif;
+}
+
+
+/* ---------- 2. כפתורים ושדות ---------- */
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary-dark);
+    --bs-btn-hover-border-color: var(--primary-dark);
+    --bs-btn-active-bg: var(--primary-dark);
+    --bs-btn-active-border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary);
+    --bs-btn-hover-border-color: var(--primary);
+    --bs-btn-active-bg: var(--primary-dark);
+}
+
+.btn:focus-visible,
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.20);
+}
+
+
+/* ---------- 3. לוגו וסרגל עליון ---------- */
+
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--neutral);
+    text-decoration: none;
+}
+
+    .logo:hover {
+        color: var(--neutral);
+    }
+
+.logo-name {
+    font-family: 'Rubik', 'Heebo', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.1;
+    direction: ltr;
+}
+
+.logo-tag {
+    font-size: 14px;
+    color: #64748B;
+}
+
+
+/* ---------- 4. הודעת השגיאה של Blazor ---------- */
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        left: 0.75rem;
+        top: 0.5rem;
+    }

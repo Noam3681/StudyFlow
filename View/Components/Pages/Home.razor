@@ -1,0 +1,255 @@
+﻿@page "/"
+
+<PageTitle>StudyFlow · מנהלים את הלימודים במקום אחד</PageTitle>
+
+@* ===== פתיחה: מטרת האתר ===== *@
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <p class="text-primary fw-semibold mb-2">
+                    מערכת אישית לניהול הלימודים
+                </p>
+
+                <h1 class="display-4 fw-bold mb-3">
+                    כל הלימודים שלך במקום אחד.
+                </h1>
+
+                <p class="lead text-secondary">
+                    StudyFlow עוזר לך לנהל משימות, מבחנים, עבודות,
+                    מערכת שעות, חומרי לימוד וזמני למידה בצורה מסודרת ופשוטה.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a class="btn btn-primary btn-lg" href="register">
+                        להתחיל עכשיו
+                    </a>
+
+                    <a class="btn btn-outline-primary btn-lg" href="login">
+                        כבר רשום? לכניסה
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm">
+                    <img class="object-fit-cover"
+                         src="@Assets["images/student.jpg"]"
+                         alt="תלמיד לומד ליד שולחן עם ספרים" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@* ===== למה StudyFlow ===== *@
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <p class="text-primary fw-semibold mb-2">
+            למה StudyFlow?
+        </p>
+
+        <h2 class="fw-bold mb-5">
+            פחות בלגן, יותר שליטה בלימודים
+        </h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-4 bg-white border rounded-4 shadow-sm h-100">
+                    <h3 class="h5 fw-semibold">
+                        לא שוכחים מועדים
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        מרכזים מבחנים, עבודות ושיעורי בית במקום אחד
+                        ורואים מה צריך לעשות בקרוב.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-4 bg-white border rounded-4 shadow-sm h-100">
+                    <h3 class="h5 fw-semibold">
+                        הכול במקום אחד
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        מערכת שעות, משימות וחומרי לימוד נשמרים
+                        במערכת אחת במקום להיות מפוזרים בין כמה מקומות.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-4 bg-white border rounded-4 shadow-sm h-100">
+                    <h3 class="h5 fw-semibold">
+                        מתכננים את הזמן
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        קובעים זמני למידה ועוקבים אחרי מה שכבר הושלם
+                        ומה עדיין נשאר לעשות.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@* ===== יכולות מרכזיות ===== *@
+<section class="py-5">
+    <div class="container">
+        <p class="text-primary fw-semibold mb-2">
+            כל מה שצריך ללימודים
+        </p>
+
+        <h2 class="fw-bold mb-5">
+            כלים שיעזרו לך להישאר מסודר
+        </h2>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card h-100 shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <span class="badge bg-primary rounded-pill mb-3">
+                            משימות ומבחנים
+                        </span>
+
+                        <h3 class="h4 fw-bold">
+                            מנהלים את כל המטלות
+                        </h3>
+
+                        <p class="text-secondary">
+                            מוסיפים משימות, שיעורי בית, מבחנים ועבודות,
+                            קובעים תאריך יעד ורמת חשיבות ומסמנים מה כבר הושלם.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card h-100 shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <span class="badge bg-primary rounded-pill mb-3">
+                            מערכת אישית
+                        </span>
+
+                        <h3 class="h4 fw-bold">
+                            מערכת שעות וחומרי לימוד
+                        </h3>
+
+                        <p class="text-secondary">
+                            בונים מערכת שעות אישית ושומרים קישורים,
+                            סיכומים וחומרי לימוד לפי המקצוע המתאים.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@* ===== איך זה עובד ===== *@
+<section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+        <p class="text-primary fw-semibold mb-2">
+            איך זה עובד?
+        </p>
+
+        <h2 class="fw-bold mb-5">
+            ארבעה צעדים לסדר בלימודים
+        </h2>
+
+        <ol class="list-unstyled row g-4 mb-0">
+            <li class="col-sm-6 col-lg-3">
+                <span class="badge bg-primary rounded-pill fs-5 mb-3">
+                    1
+                </span>
+
+                <h3 class="h5 fw-semibold">
+                    נרשמים
+                </h3>
+
+                <p class="text-secondary">
+                    יוצרים חשבון אישי ונכנסים ל־StudyFlow.
+                </p>
+            </li>
+
+            <li class="col-sm-6 col-lg-3">
+                <span class="badge bg-primary rounded-pill fs-5 mb-3">
+                    2
+                </span>
+
+                <h3 class="h5 fw-semibold">
+                    מוסיפים מידע
+                </h3>
+
+                <p class="text-secondary">
+                    מוסיפים מקצועות, משימות, מבחנים ועבודות.
+                </p>
+            </li>
+
+            <li class="col-sm-6 col-lg-3">
+                <span class="badge bg-primary rounded-pill fs-5 mb-3">
+                    3
+                </span>
+
+                <h3 class="h5 fw-semibold">
+                    מתכננים
+                </h3>
+
+                <p class="text-secondary">
+                    בונים מערכת שעות וקובעים זמני למידה.
+                </p>
+            </li>
+
+            <li class="col-sm-6 col-lg-3">
+                <span class="badge bg-primary rounded-pill fs-5 mb-3">
+                    4
+                </span>
+
+                <h3 class="h5 fw-semibold">
+                    עוקבים
+                </h3>
+
+                <p class="text-secondary">
+                    רואים מה הושלם ומה עדיין מחכה לביצוע.
+                </p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+
+@* ===== הזמנה ===== *@
+<section class="py-5">
+    <div class="container">
+        <div class="bg-primary text-white rounded-4 p-4 p-md-5
+            d-flex flex-wrap align-items-center
+            justify-content-between gap-4">
+
+            <div>
+                <h2 class="fw-bold mb-2">
+                    מוכנים לעשות סדר בלימודים?
+                </h2>
+
+                <p class="mb-0 opacity-75">
+                    צרו חשבון והתחילו לנהל את הלימודים במקום אחד.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-light btn-lg" href="register">
+                    להרשמה
+                </a>
+
+                <a class="btn btn-outline-light btn-lg" href="login">
+                    לכניסה
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
