@@ -1,50 +1,113 @@
 ﻿@page "/register"
 
+@* גורם לדף להיות אינטראקטיבי בצד השרת.
+   בלי זה הלחיצה על הכפתור לא תפעיל את קוד ה-C#.
+   prerender: false מונע מצב שבו המשתמש מקליד לפני שהחיבור לשרת מוכן. *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@* מאפשר להשתמש במחלקה MailAddress כדי לבדוק אם אימייל תקין *@
+@using System.Net.Mail
+
+@* מאפשר להשתמש במחלקת User שנמצאת בפרויקט Model *@
+@using Model
+
+@* HttpClient משמש לשליחת בקשות HTTP מה-View אל ה-API.
+   הוא כבר קיבל את הכתובת הבסיסית של ה-API דרך Program.cs. *@
+@inject HttpClient Http
+
+@* מאפשר להעביר את המשתמש לדף אחר מתוך קוד C# *@
+@inject NavigationManager Navigation
+
+
+@* הכותרת שמופיעה בטאב של הדפדפן *@
 <PageTitle>הרשמה · StudyFlow</PageTitle>
 
+
+@* אזור דף ההרשמה.
+   Bootstrap ממקם את הכרטיס במרכז ומתאים את הרוחב לגודל המסך. *@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-5">
 
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
+
                     <h1 class="h2 fw-bold">הרשמה ל־StudyFlow</h1>
 
                     <p class="text-secondary mb-4">
                         צרו חשבון אישי והתחילו לנהל את הלימודים במקום אחד.
                     </p>
 
+                    @* novalidate אומר שאנחנו לא מסתמכים על בדיקות הטופס של הדפדפן.
+                       כל הבדיקות יתבצעו בקוד C# שלנו. *@
                     <form novalidate>
+
+                        @* כל Field מקושר למשתנה בעזרת @bind-Value.
+                           כשהמשתמש משנה את הערך בשדה, המשתנה בקוד מתעדכן. *@
                         <Field Id="reg-username"
                                Label="שם משתמש"
-                               Name="username" />
+                               Name="username"
+                               @bind-Value="username" />
 
                         <Field Id="reg-email"
                                Label="אימייל"
                                Name="email"
                                Type="email"
-                               Dir="ltr" />
+                               Dir="ltr"
+                               @bind-Value="email" />
 
                         <Field Id="reg-password"
                                Label="סיסמה"
                                Name="password"
                                Type="password"
-                               Dir="ltr" />
+                               Dir="ltr"
+                               @bind-Value="password" />
 
                         <Field Id="reg-confirm"
                                Label="אימות סיסמה"
                                Name="confirmPassword"
                                Type="password"
-                               Dir="ltr" />
+                               Dir="ltr"
+                               @bind-Value="confirmPassword" />
 
+
+                        @* אם קיימת שגיאה, מציגים אותה למשתמש *@
+                        @if (errorMessage != null)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @errorMessage
+                            </div>
+                        }
+
+
+                        @* אחרי הרשמה מוצלחת מציגים הודעה וספירה לאחור *@
+                        @if (isRegistered)
+                        {
+                            <div class="alert alert-success" role="status">
+                                <strong>ההרשמה הצליחה!</strong>
+                                עוברים לדף הכניסה בעוד @secondsLeft שניות.
+                            </div>
+                        }
+
+
+                        @* לחיצה על הכפתור מפעילה את RegisterAsync.
+                           בזמן שהבקשה נשלחת או אחרי שההרשמה הצליחה,
+                           הכפתור מושבת כדי שלא ישלחו הרשמה פעמיים. *@
                         <button class="btn btn-primary btn-lg w-100 mt-2"
-                                type="button">
-                            הרשמה
+                                type="button"
+                                disabled="@(isBusy || isRegistered)"
+                                @onclick="RegisterAsync">
+
+                            @* בזמן שליחת הבקשה הטקסט משתנה ל"בודקים..." *@
+                            @(isBusy ? "בודקים..." : "הרשמה")
                         </button>
+
                     </form>
                 </div>
             </div>
 
+
+            @* קישור למסך הכניסה למשתמש שכבר רשום *@
             <p class="text-center mt-4">
                 כבר יש לך חשבון?
                 <a class="fw-bold" href="login">לכניסה</a>
@@ -53,3 +116,164 @@
         </div>
     </div>
 </div>
+
+
+@code {
+
+    // הערכים שהמשתמש מקליד בטופס.
+    // כל אחד מהם מקושר ל-Field המתאים באמצעות @bind-Value.
+    private string? username;
+    private string? email;
+    private string? password;
+    private string? confirmPassword;
+
+
+    // הודעת השגיאה שתוצג למשתמש במקרה של בעיה.
+    private string? errorMessage;
+
+    // true בזמן שמתבצעת בקשת HTTP.
+    // משמש גם להשבתת הכפתור.
+    private bool isBusy;
+
+    // true אחרי שהמשתמש נוצר בהצלחה.
+    private bool isRegistered;
+
+    // מספר השניות עד המעבר לדף הכניסה.
+    private int secondsLeft = 5;
+
+
+    // הפעולה שמופעלת כאשר לוחצים על כפתור "הרשמה".
+    private async Task RegisterAsync()
+    {
+        // מנקים שגיאה ישנה לפני ניסיון הרשמה חדש.
+        errorMessage = null;
+
+
+        // ---------- בדיקות קלט מקומיות ----------
+
+        // בודקים שכל ארבעת השדות מולאו.
+        // אין טעם לפנות ל-API אם כבר כאן חסר מידע.
+        if (string.IsNullOrWhiteSpace(username) ||
+            string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(password) ||
+            string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            errorMessage = "יש למלא את כל השדות.";
+            return;
+        }
+
+
+        // בודקים שהאימייל בנוי בפורמט תקין.
+        if (!MailAddress.TryCreate(email.Trim(), out _))
+        {
+            errorMessage = "כתובת האימייל לא תקינה.";
+            return;
+        }
+
+
+        // בודקים שהסיסמה ואימות הסיסמה זהים.
+        if (password != confirmPassword)
+        {
+            errorMessage = "הסיסמה ואימות הסיסמה לא זהים.";
+            return;
+        }
+
+
+        // מסמנים שהמערכת כרגע מבצעת בקשה.
+        isBusy = true;
+
+        try
+        {
+            // ---------- שלב 1: קריאה מה-API ----------
+
+            // בודקים אם שם המשתמש כבר קיים.
+            // ב-UsersController שלנו שם המשתמש מתקבל דרך [FromQuery],
+            // ולכן שולחים אותו אחרי ?username= ולא כחלק מהנתיב.
+            bool usernameExists =
+                await Http.GetFromJsonAsync<bool>(
+                    $"api/users/username-exists?username={Uri.EscapeDataString(username.Trim())}");
+
+            if (usernameExists)
+            {
+                errorMessage = "שם המשתמש כבר תפוס. בחרו שם אחר.";
+                return;
+            }
+
+
+            // בודקים אם האימייל כבר קיים.
+            // גם האימייל מתקבל ב-UsersController דרך [FromQuery],
+            // ולכן הוא נשלח אחרי ?email=.
+            bool emailExists =
+                await Http.GetFromJsonAsync<bool>(
+                    $"api/users/email-exists?email={Uri.EscapeDataString(email.Trim())}");
+
+            if (emailExists)
+            {
+                errorMessage = "האימייל הזה כבר רשום במערכת.";
+                return;
+            }
+
+
+            // ---------- שלב 2: כתיבה דרך ה-API ----------
+
+            // יוצרים גוף בקשה נפרד להרשמה.
+            // אנחנו לא שולחים את עצם User עצמו,
+            // כי השדה Password מסומן ב-[JsonIgnore] ולא ייכלל ב-JSON.
+            var newUserRequest = new
+            {
+                Username = username.Trim(),
+                Email = email.Trim(),
+                Password = password
+            };
+
+            // שולחים את פרטי ההרשמה ל-API.
+            // ה-API יקבל Username, Email ו-Password וייצור מהם משתמש חדש.
+            HttpResponseMessage response =
+                await Http.PostAsJsonAsync("api/users", newUserRequest);
+
+
+            // אם ה-API לא החזיר קוד הצלחה, מציגים הודעת שגיאה.
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "ההרשמה נכשלה. נסו שוב.";
+                return;
+            }
+        }
+        catch (HttpRequestException)
+        {
+            // מגיעים לכאן אם אין אפשרות להגיע ל-API,
+            // למשל אם פרויקט StudyFlowAPI לא רץ.
+            errorMessage = "השרת לא זמין כרגע. נסו שוב בעוד רגע.";
+            return;
+        }
+        finally
+        {
+            // finally תמיד רץ, גם אם יצאנו עם return.
+            // כך הכפתור לא נשאר במצב מושבת בטעות.
+            isBusy = false;
+        }
+
+
+        // ---------- הרשמה הצליחה ----------
+
+        // מציגים את הודעת ההצלחה.
+        isRegistered = true;
+
+
+        // ספירה לאחור של 5 שניות.
+        while (secondsLeft > 0)
+        {
+            // גורם לדף להתעדכן מיד ולהציג את המספר החדש.
+            StateHasChanged();
+
+            // ממתינים שנייה בלי לחסום את השרת.
+            await Task.Delay(1000);
+
+            secondsLeft--;
+        }
+
+
+        // בסיום הספירה מעבירים את המשתמש לדף הכניסה.
+        Navigation.NavigateTo("login");
+    }
+}

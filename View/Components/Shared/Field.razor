@@ -7,8 +7,16 @@
     <label class="form-label fw-medium" for="@Id">
         @Label <span class="text-danger" aria-hidden="true">*</span>
     </label>
-    @* ערך שמתחיל בסימן @ נלקח מהפרמטרים שהדף העביר לרכיב *@
-    <input class="form-control form-control-lg" id="@Id" name="@Name" type="@Type" dir="@Dir" required />
+
+    @* value מציג את הערך הנוכחי, ו-onchange מעדכן את הדף כשהמשתמש משנה את השדה *@
+    <input class="form-control form-control-lg"
+           id="@Id"
+           name="@Name"
+           type="@Type"
+           dir="@Dir"
+           value="@Value"
+           @onchange="OnValueChanged"
+           required />
 </div>
 
 @code {
@@ -28,4 +36,14 @@
 
     // כיוון הכתיבה. משמאל לימין בשדות שמכילים אותיות לועזיות, כמו אימייל וסיסמה
     [Parameter] public string? Dir { get; set; }
+
+    // הערך שבתיבת הקלט
+    [Parameter] public string? Value { get; set; }
+
+    // הפעולה של הדף שמקבלת את הערך החדש
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+
+    // נקראת כשהמשתמש משנה את הערך ויוצא מהשדה
+    private Task OnValueChanged(ChangeEventArgs e) =>
+        ValueChanged.InvokeAsync(e.Value?.ToString());
 }
