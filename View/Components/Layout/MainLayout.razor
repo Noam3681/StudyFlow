@@ -1,12 +1,34 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject UserSession Session
+@inject NavigationManager Navigation
 
 <header class="topbar sticky-top">
     <div class="container d-flex align-items-center justify-content-between py-3">
         <Logo />
 
-        <nav class="d-flex gap-2">
-            <a class="btn btn-outline-primary" href="login">כניסה</a>
-            <a class="btn btn-primary" href="register">הרשמה</a>
+        <nav class="d-flex align-items-center gap-2">
+
+            @* אם המשתמש מחובר, מציגים את שמו וכפתור התנתקות *@
+            @if (Session.IsLoggedIn)
+            {
+                <span class="text-secondary">
+                    שלום, @Session.Username
+                </span>
+
+                <button class="btn btn-outline-primary"
+                        @onclick="Logout">
+                    התנתקות
+                </button>
+            }
+            else
+            {
+                @* אם המשתמש אינו מחובר, מציגים כניסה והרשמה *@
+                <a class="btn btn-outline-primary" href="login">כניסה</a>
+                <a class="btn btn-primary" href="register">הרשמה</a>
+            }
+
         </nav>
     </div>
 </header>
@@ -27,3 +49,30 @@
     <a href="." class="reload">רענון</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    // נרשמים לאירוע כדי לעדכן את התפריט כשהמשתמש מתחבר או מתנתק.
+    protected override void OnInitialized()
+    {
+        Session.OnChange += HandleSessionChanged;
+    }
+
+    // מרעננים את התצוגה כאשר מצב ההתחברות משתנה.
+    private void HandleSessionChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    // מנתקים את המשתמש ומעבירים אותו לדף הבית.
+    private void Logout()
+    {
+        Session.Logout();
+        Navigation.NavigateTo("");
+    }
+
+    // מסירים את ההרשמה לאירוע כשהרכיב נסגר.
+    public void Dispose()
+    {
+        Session.OnChange -= HandleSessionChanged;
+    }
+}

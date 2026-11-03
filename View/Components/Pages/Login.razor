@@ -1,4 +1,10 @@
-﻿@page "/login"
+﻿
+@page "/login"
+@using System.Net
+@using Model
+@inject HttpClient Http
+@inject UserSession Session
+@inject NavigationManager Navigation
 
 <PageTitle>כניסה · StudyFlow</PageTitle>
 
@@ -14,20 +20,34 @@
                         היכנסו לחשבון כדי להמשיך לנהל את הלימודים שלכם.
                     </p>
 
+                    @* השדות מחוברים למשתנים בקוד באמצעות קישור דו-כיווני *@
                     <form novalidate>
                         <Field Id="login-username"
                                Label="שם משתמש"
-                               Name="username" />
+                               Name="username"
+                               @bind-Value="username" />
 
                         <Field Id="login-password"
                                Label="סיסמה"
                                Name="password"
                                Type="password"
-                               Dir="ltr" />
+                               Dir="ltr"
+                               @bind-Value="password" />
 
+                        @* הצגת הודעת שגיאה רק כאשר קיימת שגיאה *@
+                        @if (errorMessage != null)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @errorMessage
+                            </div>
+                        }
+
+                        @* הפעלת ההתחברות ומניעת לחיצות חוזרות בזמן הבדיקה *@
                         <button class="btn btn-primary btn-lg w-100 mt-2"
-                                type="button">
-                            כניסה
+                                type="button"
+                                disabled="@isBusy"
+                                @onclick="LoginAsync">
+                            @(isBusy ? "בודקים..." : "כניסה")
                         </button>
                     </form>
                 </div>
@@ -41,3 +61,81 @@
         </div>
     </div>
 </div>
+
+@code {
+    // פרטי ההתחברות שהמשתמש מקליד.
+    private string? username;
+    private string? password;
+
+    // הודעת שגיאה ומצב שליחת הבקשה.
+    private string? errorMessage;
+    private bool isBusy;
+
+    // פעולה שמופעלת כאשר לוחצים על כפתור הכניסה.
+    private async Task LoginAsync()
+    {
+        errorMessage = null;
+
+        // בודקים ששני השדות מולאו לפני הפנייה לשרת.
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "יש למלא שם משתמש וסיסמה.";
+            return;
+        }
+
+        isBusy = true;
+
+        try
+        {
+            // מכינים את פרטי ההתחברות לשליחה לשרת.
+            var credentials = new
+            {
+               Username = username.Trim(),
+               Password = password
+            };
+
+            HttpResponseMessage response =
+                await Http.PostAsJsonAsync("api/users/login", credentials);
+
+            // קוד 401 מציין ששם המשתמש או הסיסמה שגויים.
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                errorMessage = "שם המשתמש או הסיסמה שגויים.";
+                return;
+            }
+
+            // טיפול בשגיאה אחרת שהשרת החזיר.
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "הכניסה נכשלה. נסו שוב.";
+                return;
+            }
+
+            // מקבלים מהשרת את פרטי המשתמש שהתחבר.
+            User? user = await response.Content.ReadFromJsonAsync<User>();
+
+            if (user == null)
+            {
+                errorMessage = "הכניסה נכשלה. נסו שוב.";
+                return;
+            }
+
+            // שומרים את המשתמש בשירות כדי ששאר הדפים יכירו אותו.
+            Session.Login(user);
+        }
+        catch (HttpRequestException)
+        {
+            // טיפול במקרה שה-API אינו זמין.
+            errorMessage = "השרת לא זמין כרגע. נסו שוב בעוד רגע.";
+            return;
+        }
+        finally
+        {
+            // מחזירים את הכפתור למצב רגיל בסיום הבקשה.
+            isBusy = false;
+        }
+
+        // לאחר התחברות מוצלחת עוברים לדף הבית.
+        Navigation.NavigateTo("");
+    }
+}

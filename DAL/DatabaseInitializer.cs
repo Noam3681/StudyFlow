@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿
+using MySql.Data.MySqlClient;
 
 namespace DAL
 {
@@ -187,8 +188,8 @@ namespace DAL
 
             await connection.OpenAsync();
 
-            string countSql =
-                "SELECT COUNT(*) FROM Users;";
+            // בודקים אם כבר קיימים משתמשים בבסיס הנתונים.
+            string countSql = "SELECT COUNT(*) FROM Users;";
 
             using var countCommand =
                 new MySqlCommand(countSql, connection);
@@ -196,32 +197,43 @@ namespace DAL
             int count =
                 Convert.ToInt32(await countCommand.ExecuteScalarAsync());
 
+            // לא מוסיפים משתמשי התחלה אם הטבלה אינה ריקה.
             if (count > 0)
             {
                 return;
             }
 
-            // במקום לשמור את שם התפקיד כטקסט,
-            // כל משתמש מקבל RoleID שמפנה לטבלת Roles.
+            // פקודת SQL להוספת משתמש עם גיבוב סיסמה.
             string sql =
                 "INSERT INTO Users " +
                 "(Username, Email, PasswordHash, RoleID, IsActive) " +
                 "VALUES " +
-                "('admin', 'admin@studyflow.com', 'Admin123', 1, TRUE), " +
-                "('student1', 'student1@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student2', 'student2@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student3', 'student3@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student4', 'student4@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student5', 'student5@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student6', 'student6@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student7', 'student7@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student8', 'student8@studyflow.com', 'Student123', 2, TRUE), " +
-                "('student9', 'student9@studyflow.com', 'Student123', 2, TRUE);";
+                "(@Username, @Email, @Hash, " +
+                "(SELECT RoleID FROM Roles WHERE RoleName = @RoleName), TRUE);";
 
-            using var command =
-                new MySqlCommand(sql, connection);
+            // יוצרים משתמש מנהל ושומרים גיבוב במקום סיסמה רגילה.
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Username", "admin");
+                command.Parameters.AddWithValue("@Email", "admin@studyflow.com");
+                command.Parameters.AddWithValue("@Hash",
+                    BCrypt.Net.BCrypt.HashPassword("admin"));
+                command.Parameters.AddWithValue("@RoleName", "Admin");
 
-            await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            // יוצרים משתמש תלמיד ושומרים גיבוב במקום סיסמה רגילה.
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Username", "user");
+                command.Parameters.AddWithValue("@Email", "user@studyflow.com");
+                command.Parameters.AddWithValue("@Hash",
+                    BCrypt.Net.BCrypt.HashPassword("user"));
+                command.Parameters.AddWithValue("@RoleName", "Student");
+
+                await command.ExecuteNonQueryAsync();
+            }
         }
     }
 }

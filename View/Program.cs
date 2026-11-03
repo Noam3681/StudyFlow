@@ -14,6 +14,10 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri(apiBaseUrl)
 });
 
+// רישום שירות ששומר את פרטי המשתמש המחובר.
+// AddScoped יוצר שירות נפרד לכל חיבור של משתמש לאתר.
+builder.Services.AddScoped<View.Services.UserSession>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

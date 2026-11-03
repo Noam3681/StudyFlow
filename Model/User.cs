@@ -7,6 +7,13 @@ namespace Model
     // ושם התפקיד מתקבל מבסיס הנתונים בעזרת JOIN עם טבלת Roles.
     public class User : BaseEntity
     {
+
+        // בנאי ריק שמאפשר להמיר תשובת JSON מהשרת לאובייקט User.
+        public User()
+        {
+        }
+
+
         // שם המשתמש.
         public string Username { get; set; }
 

@@ -34,7 +34,8 @@ namespace DAL
 
             command.Parameters.AddWithValue("@Username", user.Username);
             command.Parameters.AddWithValue("@Email", user.Email);
-            command.Parameters.AddWithValue("@Password", user.Password);
+            // מגבבים את הסיסמה לפני שמירתה בבסיס הנתונים.
+            command.Parameters.AddWithValue("@Password", BCrypt.Net.BCrypt.HashPassword(user.Password));
             command.Parameters.AddWithValue("@RoleID", user.RoleID);
             command.Parameters.AddWithValue("@IsActive", user.IsActive);
 
@@ -121,10 +122,13 @@ namespace DAL
 
             User user = ReadUser(reader);
 
-            if (user.Password != password)
+
+            // בודקים אם הסיסמה שהוקלדה מתאימה לגיבוב ששמור בבסיס הנתונים.
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return null;
             }
+
 
             return user;
         }
@@ -285,7 +289,10 @@ namespace DAL
 
             using var command = new MySqlCommand(sql, connection);
 
-            command.Parameters.AddWithValue("@Password", password);
+
+            // מגבבים את הסיסמה החדשה לפני עדכונה בבסיס הנתונים.
+            command.Parameters.AddWithValue("@Password", BCrypt.Net.BCrypt.HashPassword(password));
+
             command.Parameters.AddWithValue("@UserID", userId);
 
             int rows =
