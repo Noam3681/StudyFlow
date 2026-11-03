@@ -1,3 +1,4 @@
+
 @StudyFlowAPI_HostAddress = http://localhost:5079
 
 
@@ -71,4 +72,47 @@ Content-Type: application/json
 
 {
   "email": "student2new@studyflow.com"
+}
+
+
+### 11. V7 - Test BCrypt password update
+# שינוי סיסמה למשתמש הבדיקה testbcrypt7 שמזההו 13
+# הסיסמה החדשה אמורה להישמר בבסיס הנתונים כגיבוב BCrypt
+PUT {{StudyFlowAPI_HostAddress}}/api/users/13/password
+Content-Type: application/json
+
+{
+  "password": "Test12345!"
+}
+
+
+### 12. V7 - Login with updated password
+POST {{StudyFlowAPI_HostAddress}}/api/users/login
+Content-Type: application/json
+
+{
+  "username": "testbcrypt7",
+  "password": "Test12345!"
+}
+
+
+### 13. V7 - Reject old password
+POST {{StudyFlowAPI_HostAddress}}/api/users/login
+Content-Type: application/json
+
+{
+  "username": "testbcrypt7",
+  "password": "Test123"
+}
+
+
+
+### 14. V8 - Reset Admin test password
+# שינוי סיסמה לחשבון המנהל הקיים (UserID = 1)
+# הסיסמה תישמר באמצעות BCrypt, לפי המימוש של V7
+PUT {{StudyFlowAPI_HostAddress}}/api/users/1/password
+Content-Type: application/json
+
+{
+  "password": "Admin123!"
 }

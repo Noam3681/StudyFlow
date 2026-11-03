@@ -1,0 +1,32 @@
+﻿
+@page "/student-home"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V8: דף הבית של התלמיד. *@
+@* רק משתמש מחובר בעל תפקיד Student יכול לראות את תוכן הדף. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Student")
+{
+    <h1>דף הבית של התלמיד</h1>
+}
+
+@code {
+    // V8: בודקים את מצב ההתחברות ואת תפקיד המשתמש לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // אורח שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו תלמיד מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Student")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

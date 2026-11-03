@@ -90,8 +90,8 @@
             // מכינים את פרטי ההתחברות לשליחה לשרת.
             var credentials = new
             {
-               Username = username.Trim(),
-               Password = password
+                Username = username.Trim(),
+                Password = password
             };
 
             HttpResponseMessage response =
@@ -122,6 +122,28 @@
 
             // שומרים את המשתמש בשירות כדי ששאר הדפים יכירו אותו.
             Session.Login(user);
+
+            // V8: מפנים כל משתמש לדף הבית המתאים לתפקיד שלו.
+            // משתמש מסוג Admin מועבר לדף המנהל.
+            if (user.Role == "Admin")
+            {
+                Navigation.NavigateTo("/admin-home");
+            }
+            // משתמש מסוג Student מועבר לדף התלמיד.
+            else if (user.Role == "Student")
+            {
+                Navigation.NavigateTo("/student-home");
+            }
+            // משתמש מסוג Teacher מועבר לדף המורה.
+            else if (user.Role == "Teacher")
+            {
+                Navigation.NavigateTo("/teacher-home");
+            }
+            // תפקיד לא מוכר מועבר לדף הבית הכללי.
+            else
+            {
+                Navigation.NavigateTo("/");
+            }
         }
         catch (HttpRequestException)
         {
@@ -134,8 +156,5 @@
             // מחזירים את הכפתור למצב רגיל בסיום הבקשה.
             isBusy = false;
         }
-
-        // לאחר התחברות מוצלחת עוברים לדף הבית.
-        Navigation.NavigateTo("");
     }
 }

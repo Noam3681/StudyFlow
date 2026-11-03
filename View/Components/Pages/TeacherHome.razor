@@ -1,0 +1,32 @@
+﻿
+@page "/teacher-home"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V8: דף הבית של המורה. *@
+@* רק משתמש מחובר בעל תפקיד Teacher יכול לראות את תוכן הדף. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Teacher")
+{
+    <h1>דף הבית של המורה</h1>
+}
+
+@code {
+    // V8: בודקים את מצב ההתחברות ואת תפקיד המשתמש לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // אורח שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מורה מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Teacher")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

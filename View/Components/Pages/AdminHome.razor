@@ -1,0 +1,32 @@
+﻿
+@page "/admin-home"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V8: דף הבית של מנהל המערכת. *@
+@* רק משתמש מחובר בעל תפקיד Admin יכול לראות את תוכן הדף. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Admin")
+{
+    <h1>דף הבית של מנהל המערכת</h1>
+}
+
+@code {
+    // V8: בודקים את מצב ההתחברות ואת תפקיד המשתמש לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // אורח שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מנהל מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Admin")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

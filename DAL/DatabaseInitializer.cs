@@ -151,8 +151,8 @@ namespace DAL
             }
         }
 
-        // מוסיף את התפקידים הבסיסיים של המערכת.
-        // ID 1 = Admin, ID 2 = Student.
+        // V8: מוסיף את שלושת התפקידים של מערכת StudyFlow.
+        // ID 1 = Admin, ID 2 = Student, ID 3 = Teacher.
         private static async Task SeedRolesAsync(string connectionString)
         {
             var builder = new MySqlConnectionStringBuilder(connectionString)
@@ -165,17 +165,20 @@ namespace DAL
 
             await connection.OpenAsync();
 
+            // INSERT IGNORE מונע הוספה חוזרת של תפקידים קיימים.
+            // ב-V8 הוספנו את Teacher בלי לשנות את התפקידים הקודמים.
             string sql =
                 "INSERT IGNORE INTO Roles (RoleID, RoleName) " +
                 "VALUES " +
                 "(1, 'Admin'), " +
-                "(2, 'Student');";
+                "(2, 'Student'), " +
+                "(3, 'Teacher');";
 
             using var command = new MySqlCommand(sql, connection);
             await command.ExecuteNonQueryAsync();
         }
 
-        // מוסיף משתמשי התחלה רק אם טבלת Users עדיין ריקה.
+        // V8: מוסיף משתמש בדיקה לכל תפקיד, רק אם הוא עדיין לא קיים.
         private static async Task SeedUsersAsync(string connectionString)
         {
             var builder = new MySqlConnectionStringBuilder(connectionString)
@@ -188,52 +191,67 @@ namespace DAL
 
             await connection.OpenAsync();
 
-            // בודקים אם כבר קיימים משתמשים בבסיס הנתונים.
-            string countSql = "SELECT COUNT(*) FROM Users;";
+            // בודקים ומוסיפים משתמשי בדיקה, בלי לשנות משתמשים קיימים.
+            await AddTestUserIfMissingAsync(
+                connection, "admin", "admin@studyflow.com", "admin", "Admin");
 
-            using var countCommand =
-                new MySqlCommand(countSql, connection);
+            await AddTestUserIfMissingAsync(
+                connection, "user", "user@studyflow.com", "user", "Student");
 
-            int count =
-                Convert.ToInt32(await countCommand.ExecuteScalarAsync());
+            // V8: משתמש בדיקה חדש עבור תפקיד המורה.
+            await AddTestUserIfMissingAsync(
+                connection, "teacher", "teacher@studyflow.com", "teacher", "Teacher");
+        }
 
-            // לא מוסיפים משתמשי התחלה אם הטבלה אינה ריקה.
-            if (count > 0)
+        // V8: מוסיף משתמש בדיקה רק אם שם המשתמש והאימייל אינם קיימים.
+        // הסיסמה נשמרת כגיבוב BCrypt ולא כטקסט רגיל.
+        private static async Task AddTestUserIfMissingAsync(
+            MySqlConnection connection,
+            string username,
+            string email,
+            string password,
+            string roleName)
+        {
+            // בודקים אם שם המשתמש או האימייל כבר קיימים.
+            string checkSql =
+                "SELECT COUNT(*) FROM Users " +
+                "WHERE Username = @Username OR Email = @Email;";
+
+            using (var checkCommand = new MySqlCommand(checkSql, connection))
             {
-                return;
+                checkCommand.Parameters.AddWithValue("@Username", username);
+                checkCommand.Parameters.AddWithValue("@Email", email);
+
+                int count =
+                    Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
+
+                // אם המשתמש כבר קיים, לא משנים את פרטיו.
+                if (count > 0)
+                {
+                    return;
+                }
             }
 
-            // פקודת SQL להוספת משתמש עם גיבוב סיסמה.
-            string sql =
+            // יוצרים גיבוב BCrypt עבור סיסמת משתמש הבדיקה.
+            string passwordHash =
+                BCrypt.Net.BCrypt.HashPassword(password);
+
+            // מוסיפים את המשתמש עם התפקיד המתאים מטבלת Roles.
+            string insertSql =
                 "INSERT INTO Users " +
                 "(Username, Email, PasswordHash, RoleID, IsActive) " +
                 "VALUES " +
                 "(@Username, @Email, @Hash, " +
                 "(SELECT RoleID FROM Roles WHERE RoleName = @RoleName), TRUE);";
 
-            // יוצרים משתמש מנהל ושומרים גיבוב במקום סיסמה רגילה.
-            using (var command = new MySqlCommand(sql, connection))
-            {
-                command.Parameters.AddWithValue("@Username", "admin");
-                command.Parameters.AddWithValue("@Email", "admin@studyflow.com");
-                command.Parameters.AddWithValue("@Hash",
-                    BCrypt.Net.BCrypt.HashPassword("admin"));
-                command.Parameters.AddWithValue("@RoleName", "Admin");
+            using var command = new MySqlCommand(insertSql, connection);
 
-                await command.ExecuteNonQueryAsync();
-            }
+            command.Parameters.AddWithValue("@Username", username);
+            command.Parameters.AddWithValue("@Email", email);
+            command.Parameters.AddWithValue("@Hash", passwordHash);
+            command.Parameters.AddWithValue("@RoleName", roleName);
 
-            // יוצרים משתמש תלמיד ושומרים גיבוב במקום סיסמה רגילה.
-            using (var command = new MySqlCommand(sql, connection))
-            {
-                command.Parameters.AddWithValue("@Username", "user");
-                command.Parameters.AddWithValue("@Email", "user@studyflow.com");
-                command.Parameters.AddWithValue("@Hash",
-                    BCrypt.Net.BCrypt.HashPassword("user"));
-                command.Parameters.AddWithValue("@RoleName", "Student");
-
-                await command.ExecuteNonQueryAsync();
-            }
+            await command.ExecuteNonQueryAsync();
         }
     }
 }
