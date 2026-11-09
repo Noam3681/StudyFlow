@@ -1,0 +1,242 @@
+﻿
+@page "/student-tasks"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף המשימות והמבחנים של התלמיד. *@
+@* רק משתמש מחובר בעל תפקיד Student יכול לראות את הדף. *@
+@* בשלב זה מוצגים נתוני דוגמה בלבד, ללא פנייה לבסיס הנתונים. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Student")
+{
+    @* V9: אזור הכותרת של דף המשימות והמבחנים. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת הלמידה שלי
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    המשימות והמבחנים שלי
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות במשימות, בעבודות ובמבחנים
+                    ולארגן את מועדי ההגשה שלכם במקום אחד.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של התלמיד. *@
+                <a href="/student-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של התלמיד
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: כרטיסיות סיכום עם נתוני דוגמה קבועים. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                תמונת מצב
+            </h2>
+
+            <div class="row g-4">
+
+                @* כרטיסיית משימות פתוחות. *@
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body p-4">
+
+                            <h3 class="h6 text-secondary mb-3">
+                                משימות פתוחות
+                            </h3>
+
+                            <p class="display-6 fw-bold text-primary mb-0">
+                                3
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* כרטיסיית מבחנים קרובים. *@
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body p-4">
+
+                            <h3 class="h6 text-secondary mb-3">
+                                מבחנים קרובים
+                            </h3>
+
+                            <p class="display-6 fw-bold text-primary mb-0">
+                                2
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* כרטיסיית משימות שהושלמו. *@
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body p-4">
+
+                            <h3 class="h6 text-secondary mb-3">
+                                משימות שהושלמו
+                            </h3>
+
+                            <p class="display-6 fw-bold text-primary mb-0">
+                                5
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    @* V9: טבלת משימות ומבחנים עם נתוני דוגמה. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                המשימות הקרובות שלי
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* מאפשר גלילה אופקית בטלפונים ובמסכים צרים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">משימה</th>
+                                <th scope="col">מקצוע</th>
+                                <th scope="col">תאריך</th>
+                                <th scope="col">סוג</th>
+                                <th scope="col">סטטוס</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>תרגילי אינטגרלים</td>
+                                <td>מתמטיקה</td>
+                                <td>12/11/2026</td>
+                                <td>שיעורי בית</td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        ממתין לביצוע
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>מבחן בחשמל</td>
+                                <td>פיזיקה</td>
+                                <td>18/11/2026</td>
+                                <td>מבחן</td>
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        מתקרב
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>הגשת פרויקט</td>
+                                <td>מדעי המחשב</td>
+                                <td>22/11/2026</td>
+                                <td>עבודה</td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        ממתין לביצוע
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>תרגול באנגלית</td>
+                                <td>אנגלית</td>
+                                <td>05/11/2026</td>
+                                <td>שיעורי בית</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        הושלם
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>מבחן באזרחות</td>
+                                <td>אזרחות</td>
+                                <td>25/11/2026</td>
+                                <td>מבחן</td>
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        מתקרב
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* V9: הודעה המסבירה שהפעולות יפותחו בשלבים הבאים. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מנהלים את הזמן בצורה חכמה
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך תוכלו להוסיף משימות חדשות,
+                    לעדכן סטטוסים ולעקוב אחר מועדי הגשה
+                    ישירות מתוך המערכת.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    // משתמש שאינו תלמיד לא יוכל לצפות בתוכן.
+
+    protected override void OnInitialized()
+    {
+        // אורח שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו תלמיד מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Student")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

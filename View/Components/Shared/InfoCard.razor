@@ -1,0 +1,45 @@
+﻿
+@* V9: רכיב כרטיסייה משותף להצגת מידע בדפי האתר. *@
+@* הרכיב מקבל כותרת ותיאור, ויכול להציג גם קישור לדף פנימי. *@
+
+<div class="card studyflow-card h-100">
+    <div class="card-body p-4">
+
+        @* הצגת הכותרת שהדף מעביר לרכיב. *@
+        <h3 class="h5 fw-bold mb-3">
+            @Title
+        </h3>
+
+        @* הצגת התיאור שהדף מעביר לרכיב. *@
+        <p class="text-secondary mb-0">
+            @Description
+        </p>
+
+        @* V9: הצגת כפתור רק כאשר הוגדרה כתובת קישור. *@
+        @if (!string.IsNullOrEmpty(LinkUrl))
+        {
+            <a href="@LinkUrl" class="btn btn-outline-primary mt-3">
+                @LinkText
+            </a>
+        }
+
+    </div>
+</div>
+
+@code {
+    // V9: פרמטר הכותרת של הכרטיסייה.
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    // V9: פרמטר התיאור של הכרטיסייה.
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+
+    // V9: כתובת הקישור. אם היא ריקה, לא יוצג כפתור.
+    [Parameter]
+    public string LinkUrl { get; set; } = string.Empty;
+
+    // V9: הטקסט שיופיע על הכפתור.
+    [Parameter]
+    public string LinkText { get; set; } = "לצפייה בפרטים";
+}

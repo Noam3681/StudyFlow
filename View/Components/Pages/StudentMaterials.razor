@@ -1,0 +1,177 @@
+﻿
+@page "/student-materials"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף חומרי הלימוד של התלמיד. *@
+@* הדף מציג נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות הקיים מ-V8 נשמר. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Student")
+{
+    @* V9: אזור הכותרת של הדף. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת הלמידה שלי
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    חומרי הלימוד שלי
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו למצוא סיכומים, דפי תרגול
+                    וחומרי לימוד המסודרים לפי מקצועות.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של התלמיד. *@
+                <a href="/student-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של התלמיד
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: הצגת מקצועות הלימוד באמצעות הרכיב המשותף InfoCard. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                מקצועות הלימוד
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מתמטיקה"
+                        Description="סיכומים בנושא פונקציות, נגזרות, אינטגרלים ותרגילים לחזרה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="אנגלית"
+                        Description="אוצר מילים, קטעי קריאה ותרגולים לשיפור האנגלית." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="פיזיקה"
+                        Description="סיכומים, נוסחאות ותרגילים בנושאי מכניקה וחשמל." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מדעי המחשב"
+                        Description="סיכומי שיעורים, דוגמאות קוד ותרגולים בתכנות." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלה של חומרי לימוד לדוגמה. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                חומרי לימוד אחרונים
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* מאפשר גלילה אופקית במסכים קטנים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">מקצוע</th>
+                                <th scope="col">שם החומר</th>
+                                <th scope="col">סוג החומר</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>מתמטיקה</td>
+                                <td>חזרה על נגזרות</td>
+                                <td>דף תרגול</td>
+                            </tr>
+
+                            <tr>
+                                <td>אנגלית</td>
+                                <td>אוצר מילים למבחן</td>
+                                <td>סיכום</td>
+                            </tr>
+
+                            <tr>
+                                <td>פיזיקה</td>
+                                <td>חוק קולון והשדה החשמלי</td>
+                                <td>סיכום שיעור</td>
+                            </tr>
+
+                            <tr>
+                                <td>מדעי המחשב</td>
+                                <td>מבוא ל-ASP.NET Core</td>
+                                <td>מצגת</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: מידע על אפשרויות עתידיות באתר. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    לומדים בצורה מסודרת
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך תוכלו להעלות חומרי לימוד,
+                    לשמור קבצים ולארגן אותם לפי מקצועות.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו תלמיד מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Student")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

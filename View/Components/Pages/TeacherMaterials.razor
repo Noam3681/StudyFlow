@@ -1,0 +1,186 @@
+﻿
+@page "/teacher-materials"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף חומרי הלימוד של המורה. *@
+@* הדף מבוסס על תכנון טבלת StudyMaterials. *@
+@* בשלב זה מוצגים נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות של V8 נשמר. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Teacher")
+{
+    @* V9: אזור הכותרת של דף חומרי הלימוד. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת המורה
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    חומרי לימוד
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות בחומרי לימוד,
+                    בסיכומים ובקישורים המסודרים לפי מקצועות.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של המורה. *@
+                <a href="/teacher-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של המורה
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: כרטיסיות מידע משותפות המציגות נתוני דוגמה. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                סקירת חומרי לימוד
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="סיכומי שיעורים"
+                        Description="4 סיכומי שיעורים זמינים לצפייה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="דפי תרגול"
+                        Description="3 דפי תרגול במקצועות השונים." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מצגות וקישורים"
+                        Description="2 חומרי לימוד נוספים מסוג מצגת או קישור." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת חומרי לימוד לדוגמה. *@
+    @* העמודות מבוססות על Title, MaterialType ו-CreatedAt. *@
+    @* שם המקצוע קשור לטבלת Subjects באמצעות SubjectID. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                רשימת חומרי לימוד
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה בטבלה במסכים קטנים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">שם החומר</th>
+                                <th scope="col">מקצוע</th>
+                                <th scope="col">סוג החומר</th>
+                                <th scope="col">תאריך יצירה</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>סיכום בנושא נגזרות</td>
+                                <td>מתמטיקה</td>
+                                <td>סיכום שיעור</td>
+                                <td>01/11/2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>תרגול פונקציות מעריכיות</td>
+                                <td>מתמטיקה</td>
+                                <td>דף תרגול</td>
+                                <td>03/11/2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>חוק קולון והשדה החשמלי</td>
+                                <td>פיזיקה</td>
+                                <td>סיכום שיעור</td>
+                                <td>04/11/2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>תרגול אוצר מילים</td>
+                                <td>אנגלית</td>
+                                <td>דף תרגול</td>
+                                <td>05/11/2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>מבוא למחלקות ב־C#</td>
+                                <td>מדעי המחשב</td>
+                                <td>מצגת</td>
+                                <td>06/11/2026</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור הסבר על אפשרויות עתידיות לניהול החומרים. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מארגנים את חומרי הלימוד
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך ניתן יהיה להוסיף חומרי לימוד,
+                    לעדכן את פרטיהם ולארגן אותם לפי מקצועות.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מורה מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Teacher")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

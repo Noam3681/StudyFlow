@@ -9,7 +9,78 @@
 
 @if (Session.IsLoggedIn && Session.RoleName == "Admin")
 {
-    <h1>דף הבית של מנהל המערכת</h1>
+    @* V9: אזור ברכה אישי למנהל המערכת. *@
+    <section class="container py-4">
+        <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+            <p class="text-primary fw-semibold mb-2">
+                אזור ניהול המערכת
+            </p>
+
+            <h1 class="display-6 fw-bold mb-3">
+                שלום, @Session.Username!
+            </h1>
+
+            <p class="lead text-secondary mb-0">
+                ברוכים הבאים לאזור מנהל המערכת ב־StudyFlow.
+                כאן תוכלו לנהל את סביבת המערכת ולצפות
+                במידע הניהולי במקום אחד.
+            </p>
+        </div>
+    </section>
+
+    @* V9: הצגת שלושת תחומי הניהול המרכזיים. *@
+    @* שימוש ברכיב InfoCard המשותף לעיצוב אחיד במערכת. *@
+    <section class="container py-4">
+        <h2 class="fw-bold mb-4">
+            סביבת הניהול שלי
+        </h2>
+
+        <div class="row g-4">
+
+            @* V9: כרטיסייה ראשונה - ניהול משתמשים עם קישור לדף הפנימי. *@
+            <div class="col-md-4">
+                <InfoCard
+                    Title="ניהול משתמשים"
+                    Description="כאן תוכלו לצפות במשתמשי המערכת ולנהל את פרטי המשתמשים בהתאם להרשאות המנהל."
+                    LinkUrl="/admin-users"
+                    LinkText="לצפייה במשתמשים" />
+            </div>
+
+            @* V9: כרטיסייה שנייה - תפקידים והרשאות עם קישור לדף הפנימי. *@
+            <div class="col-md-4">
+                <InfoCard
+                    Title="תפקידים והרשאות"
+                    Description="כאן תוכלו לצפות בתפקידים השונים במערכת ובחלוקת ההרשאות בין משתמשים, תלמידים ומורים."
+                    LinkUrl="/admin-roles"
+                    LinkText="לצפייה בתפקידים ובהרשאות" />
+            </div>
+
+            @* V9: כרטיסייה שלישית - ניהול מידע עם קישור לדף הפנימי. *@
+            <div class="col-md-4">
+                <InfoCard
+                    Title="ניהול מידע"
+                    Description="כאן תוכלו לצפות במידע הקיים במערכת ולארגן את נתוני הלימודים בצורה מסודרת."
+                    LinkUrl="/admin-data"
+                    LinkText="לצפייה במידע המערכת" />
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור מידע נוסף בתחתית דף המנהל. *@
+    <section class="container py-4">
+        <div class="bg-white border rounded-4 p-4">
+            <h2 class="h4 fw-bold mb-3">
+                מנהלים את StudyFlow
+            </h2>
+
+            <p class="text-secondary mb-0">
+                בהמשך תוכלו לבצע פעולות ניהול,
+                לעקוב אחר המידע במערכת
+                ולנהל את המשתמשים בצורה נוחה ומסודרת.
+            </p>
+        </div>
+    </section>
 }
 
 @code {
@@ -30,3 +101,4 @@
         }
     }
 }
+ננ

@@ -1,0 +1,174 @@
+﻿
+@page "/admin-roles"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף התפקידים וההרשאות של מנהל המערכת. *@
+@* הדף מבוסס על תכנון טבלת Roles. *@
+@* הנתונים המוצגים הם נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות של V8 נשמר גם בדף זה. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Admin")
+{
+    @* V9: אזור הכותרת של דף התפקידים וההרשאות. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת המנהל
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    תפקידים והרשאות
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות בתפקידים הקיימים במערכת
+                    ובהבדלים בין אזורי הגישה שלהם.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של המנהל. *@
+                <a href="/admin-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של המנהל
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: כרטיסיות מידע המציגות את שלושת תפקידי המערכת. *@
+    @* שימוש ברכיב InfoCard המשותף לעיצוב אחיד. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                התפקידים במערכת
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="Student - תלמיד"
+                        Description="משתמש בעל גישה לאזור התלמיד, למשימות, למערכת השעות ולחומרי הלימוד." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="Teacher - מורה"
+                        Description="משתמש בעל גישה לאזור המורה, למקצועות הלימוד, למשימות ולחומרי הלימוד." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="Admin - מנהל"
+                        Description="משתמש בעל גישה לאזור המנהל ולדפי הניהול של המערכת." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת תפקידים לדוגמה. *@
+    @* העמודות RoleID ו-RoleName מבוססות על טבלת Roles. *@
+    @* אזורי הגישה הם תיאור של הדפים הקיימים במערכת. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                רשימת תפקידים והרשאות
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה בטבלה גם במסכים קטנים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">מספר תפקיד לדוגמה</th>
+                                <th scope="col">שם התפקיד</th>
+                                <th scope="col">אזור גישה</th>
+                                <th scope="col">תיאור</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Student</td>
+                                <td>אזור התלמיד</td>
+                                <td>צפייה בדפים המיועדים לתלמיד</td>
+                            </tr>
+
+                            <tr>
+                                <td>2</td>
+                                <td>Teacher</td>
+                                <td>אזור המורה</td>
+                                <td>צפייה בדפים המיועדים למורה</td>
+                            </tr>
+
+                            <tr>
+                                <td>3</td>
+                                <td>Admin</td>
+                                <td>אזור המנהל</td>
+                                <td>צפייה בדפים המיועדים למנהל</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור הסבר על ניהול תפקידים בעתיד. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    ניהול הרשאות במערכת
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך ניתן יהיה להרחיב את אפשרויות הניהול
+                    של תפקידי המשתמשים.
+                    בשלב זה ההרשאות הקיימות נשמרות ללא שינוי.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מנהל מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Admin")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

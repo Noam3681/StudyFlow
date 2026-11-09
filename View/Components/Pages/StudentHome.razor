@@ -9,7 +9,94 @@
 
 @if (Session.IsLoggedIn && Session.RoleName == "Student")
 {
-    <h1>דף הבית של התלמיד</h1>
+    @* V9: אזור פתיחה אישי לתלמיד המחובר. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    האזור האישי שלך
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    שלום, @Session.Username!
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    ברוכים הבאים לאזור התלמיד ב־StudyFlow.
+                    כאן תוכלו לנהל את הלימודים שלכם במקום אחד.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: הצגת התחומים המרכזיים במערכת. *@
+    @* הכרטיסיות משתמשות ברכיב InfoCard המשותף. *@
+    @* בשלב זה הכרטיסיות הן תצוגה בלבד, ללא נתונים מהשרת. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                סביבת הלמידה שלי
+            </h2>
+
+            <div class="row g-4">
+
+                @* V9: כרטיסיית משימות ומבחנים עם קישור לדף הפנימי. *@
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="משימות ומבחנים"
+                        Description="כאן תוכלו לנהל שיעורי בית, עבודות ומבחנים ולעקוב אחר מועדי ההגשה."
+                        LinkUrl="/student-tasks"
+                        LinkText="לצפייה במשימות ובמבחנים" />
+                </div>
+
+                @* V9: כרטיסיית מערכת השעות עם קישור לדף הפנימי. *@
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מערכת השעות שלי"
+                        Description="כאן תוכלו לצפות במערכת השעות ולארגן את לוח הלימודים האישי."
+                        LinkUrl="/student-timetable"
+                        LinkText="לצפייה במערכת השעות" />
+                </div>
+
+                @* V9: כרטיסיית חומרי הלימוד עם קישור לדף הפנימי. *@
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="חומרי הלימוד שלי"
+                        Description="כאן תוכלו לארגן סיכומים, קישורים וחומרי לימוד לפי מקצועות."
+                        LinkUrl="/student-materials"
+                        LinkText="לצפייה בחומרי הלימוד" />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור מידע על יכולות נוספות של המערכת. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מתכננים את הלמידה
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך תוכלו לתכנן זמני למידה,
+                    לעקוב אחר ההתקדמות שלכם
+                    ולנהל את המשימות בצורה מסודרת.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
 }
 
 @code {

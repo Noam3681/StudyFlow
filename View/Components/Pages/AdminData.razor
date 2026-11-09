@@ -1,0 +1,196 @@
+﻿
+@page "/admin-data"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף ניהול המידע של מנהל המערכת. *@
+@* הדף מבוסס על תכנון הטבלאות Subjects, AcademicItems ו-StudyMaterials. *@
+@* הנתונים המוצגים הם נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות של V8 נשמר גם בדף זה. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Admin")
+{
+    @* V9: אזור הכותרת של דף ניהול המידע. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת המנהל
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    ניהול מידע
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות במידע הלימודי במערכת,
+                    הכולל מקצועות, משימות וחומרי לימוד.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של המנהל. *@
+                <a href="/admin-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של המנהל
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: כרטיסיות מידע המציגות נתוני דוגמה. *@
+    @* שימוש ברכיב InfoCard המשותף לעיצוב אחיד במערכת. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                סקירת המידע במערכת
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מקצועות לימוד"
+                        Description="4 מקצועות לימוד מוצגים במערכת לדוגמה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="משימות ומבחנים"
+                        Description="5 משימות ומבחנים מוצגים במערכת לדוגמה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="חומרי לימוד"
+                        Description="3 חומרי לימוד מוצגים במערכת לדוגמה." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת מידע לימודי לדוגמה. *@
+    @* הנתונים מבוססים על סוגי המידע הקיימים בטבלאות המערכת. *@
+    @* הטבלה היא תצוגה מאוחדת לצורך העיצוב בלבד. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                רשימת מידע לימודי
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה בטבלה גם במסכים קטנים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">שם הפריט</th>
+                                <th scope="col">סוג המידע</th>
+                                <th scope="col">מקצוע</th>
+                                <th scope="col">תיאור</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>מתמטיקה</td>
+                                <td>מקצוע לימוד</td>
+                                <td>מתמטיקה</td>
+                                <td>מקצוע לימוד במערכת</td>
+                            </tr>
+
+                            <tr>
+                                <td>פיזיקה</td>
+                                <td>מקצוע לימוד</td>
+                                <td>פיזיקה</td>
+                                <td>מקצוע לימוד במערכת</td>
+                            </tr>
+
+                            <tr>
+                                <td>תרגול נגזרות</td>
+                                <td>משימה</td>
+                                <td>מתמטיקה</td>
+                                <td>שיעורי בית בנושא נגזרות</td>
+                            </tr>
+
+                            <tr>
+                                <td>מבחן בחשמל</td>
+                                <td>מבחן</td>
+                                <td>פיזיקה</td>
+                                <td>מבחן בנושא שדה חשמלי</td>
+                            </tr>
+
+                            <tr>
+                                <td>סיכום פונקציות</td>
+                                <td>חומר לימוד</td>
+                                <td>מתמטיקה</td>
+                                <td>סיכום בנושא חקירת פונקציות</td>
+                            </tr>
+
+                            <tr>
+                                <td>מבוא למחלקות</td>
+                                <td>חומר לימוד</td>
+                                <td>מדעי המחשב</td>
+                                <td>מצגת בנושא מחלקות ב-C#</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור מידע על אפשרויות ניהול עתידיות. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מארגנים את המידע במערכת
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך ניתן יהיה לנהל את המידע הלימודי,
+                    לעדכן פריטים ולארגן אותם לפי מקצועות.
+                    בשלב זה מוצגים נתוני דוגמה בלבד.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מנהל מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Admin")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}
+B

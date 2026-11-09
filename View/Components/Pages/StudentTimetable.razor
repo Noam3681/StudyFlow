@@ -1,0 +1,171 @@
+﻿
+@page "/student-timetable"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף מערכת השעות של התלמיד. *@
+@* רק משתמש מחובר בעל תפקיד Student יכול לצפות בדף. *@
+@* מערכת השעות מכילה נתוני דוגמה קבועים בלבד. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Student")
+{
+    @* V9: אזור הכותרת של מערכת השעות. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת הלמידה שלי
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    מערכת השעות שלי
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות במערכת השעות השבועית
+                    ולארגן את לוח הלימודים שלכם בצורה נוחה.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של התלמיד. *@
+                <a href="/student-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של התלמיד
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת מערכת שעות שבועית עם נתוני דוגמה. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                מערכת שבועית
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה בטבלה גם בטלפון. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered text-center align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">שעה</th>
+                                <th scope="col">ראשון</th>
+                                <th scope="col">שני</th>
+                                <th scope="col">שלישי</th>
+                                <th scope="col">רביעי</th>
+                                <th scope="col">חמישי</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th scope="row">08:00–09:00</th>
+                                <td>מתמטיקה</td>
+                                <td>אנגלית</td>
+                                <td>פיזיקה</td>
+                                <td>מדעי המחשב</td>
+                                <td>מתמטיקה</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">09:00–10:00</th>
+                                <td>מתמטיקה</td>
+                                <td>אזרחות</td>
+                                <td>פיזיקה</td>
+                                <td>מדעי המחשב</td>
+                                <td>אנגלית</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">10:00–11:00</th>
+                                <td>אנגלית</td>
+                                <td>מתמטיקה</td>
+                                <td>לשון</td>
+                                <td>פיזיקה</td>
+                                <td>אזרחות</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">11:00–12:00</th>
+                                <td>מדעי המחשב</td>
+                                <td>מתמטיקה</td>
+                                <td>אנגלית</td>
+                                <td>פיזיקה</td>
+                                <td>ספרות</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">12:00–13:00</th>
+                                <td>מדעי המחשב</td>
+                                <td>פיזיקה</td>
+                                <td>אזרחות</td>
+                                <td>אנגלית</td>
+                                <td>ספרות</td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">13:00–14:00</th>
+                                <td>חינוך גופני</td>
+                                <td>פיזיקה</td>
+                                <td>מדעי המחשב</td>
+                                <td>מתמטיקה</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* V9: הסבר על יכולות עתידיות של מערכת השעות. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מתכננים את השבוע
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך תוכלו להוסיף שיעורים,
+                    לעדכן את מערכת השעות
+                    ולנהל את לוח הלימודים האישי שלכם.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // אורח שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו תלמיד מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Student")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}
+b

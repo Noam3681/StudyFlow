@@ -1,0 +1,180 @@
+﻿
+@page "/teacher-subjects"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף מקצועות הלימוד של המורה. *@
+@* הדף מבוסס על תכנון הטבלאות Subjects ו-UserSubjects. *@
+@* הנתונים המוצגים הם נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות של V8 נשמר גם בדף זה. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Teacher")
+{
+    @* V9: אזור הכותרת של דף המקצועות. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת המורה
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    מקצועות הלימוד
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות במקצועות הלימוד
+                    ולארגן את המידע הלימודי לפי מקצועות.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של המורה. *@
+                <a href="/teacher-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של המורה
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: הצגת מקצועות לדוגמה באמצעות הרכיב המשותף InfoCard. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                מקצועות הלימוד שלי
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מתמטיקה"
+                        Description="מקצוע הכולל פונקציות, נגזרות, אינטגרלים ותרגול שאלות." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="פיזיקה"
+                        Description="מקצוע הכולל מכניקה, חשמל ותרגול בעיות פיזיקליות." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מדעי המחשב"
+                        Description="מקצוע הכולל תכנות, מחלקות, מסדי נתונים ופיתוח מערכות." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת מקצועות לדוגמה. *@
+    @* SubjectID ו-SubjectName קיימים בטבלת Subjects. *@
+    @* שיוך מקצוע למשתמש מוגדר בטבלת UserSubjects. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                רשימת מקצועות
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה נוחה גם בטלפון. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">מספר מקצוע</th>
+                                <th scope="col">שם המקצוע</th>
+                                <th scope="col">שיוך למורה</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>מתמטיקה</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        משויך
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>2</td>
+                                <td>פיזיקה</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        משויך
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>3</td>
+                                <td>מדעי המחשב</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        משויך
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור הסבר על אפשרויות עתידיות. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    מארגנים את מקצועות הלימוד
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך ניתן יהיה לצפות בשיוך המקצועות
+                    ולארגן את המידע הלימודי בצורה מסודרת.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מורה מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Teacher")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}

@@ -58,3 +58,84 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+
+/* ===== V9: עיצוב אחיד לאתר StudyFlow ===== */
+
+/* צבעים מרכזיים של המערכת */
+:root {
+    --bs-primary: #4F46E5;
+    --bs-primary-rgb: 79, 70, 229;
+    --bs-link-color: #4F46E5;
+    --bs-link-hover-color: #3730A3;
+}
+
+/* רקע כללי וטקסט */
+body {
+    background-color: #F8FAFC;
+    color: #1E293B;
+}
+
+/* כפתורים ראשיים */
+.btn-primary {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #4338CA;
+        border-color: #4338CA;
+    }
+
+/* כפתורי מסגרת */
+.btn-outline-primary {
+    color: #4F46E5;
+    border-color: #4F46E5;
+    border-radius: 10px;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #4F46E5;
+        border-color: #4F46E5;
+        color: white;
+    }
+
+/* כרטיסיות */
+.card {
+    border-radius: 16px;
+    background-color: #FFFFFF;
+    transition: box-shadow 0.2s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 8px 24px rgba(30, 41, 59, 0.08);
+    }
+
+/* שדות בטפסים */
+.form-control {
+    border-radius: 10px;
+}
+
+    .form-control:focus {
+        border-color: #818CF8;
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+    }
+
+/* קישורים */
+a,
+.btn-link {
+    color: #4F46E5;
+}
+
+/* כותרות */
+h1, h2, h3 {
+    color: #1E293B;
+}
+
+/* תגיות Bootstrap */
+.badge.bg-primary {
+    background-color: #4F46E5 !important;
+}

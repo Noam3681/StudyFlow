@@ -1,0 +1,225 @@
+﻿
+@page "/admin-users"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject View.Services.UserSession Session
+@inject NavigationManager Navigation
+
+@* V9: דף ניהול המשתמשים של מנהל המערכת. *@
+@* הדף מבוסס על תכנון הטבלאות Users ו-Roles. *@
+@* בשלב זה מוצגים נתוני דוגמה בלבד, ללא גישה לבסיס הנתונים. *@
+@* מנגנון ההרשאות של V8 נשמר גם בדף זה. *@
+
+@if (Session.IsLoggedIn && Session.RoleName == "Admin")
+{
+    @* V9: אזור הכותרת של דף ניהול המשתמשים. *@
+    <section class="py-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 shadow-sm p-4 p-md-5">
+
+                <p class="text-primary fw-semibold mb-2">
+                    סביבת המנהל
+                </p>
+
+                <h1 class="fw-bold mb-3">
+                    ניהול משתמשים
+                </h1>
+
+                <p class="lead text-secondary mb-0">
+                    כאן תוכלו לצפות במשתמשי המערכת,
+                    בתפקידים שלהם ובמצב החשבון.
+                </p>
+
+                @* V9: קישור חזרה לדף הבית של המנהל. *@
+                <a href="/admin-home" class="btn btn-outline-primary mt-3">
+                    חזרה לדף הבית של המנהל
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: כרטיסיות מידע המציגות נתוני משתמשים לדוגמה. *@
+    @* שימוש ברכיב InfoCard המשותף לכל חלקי המערכת. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                סקירת משתמשים
+            </h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="תלמידים"
+                        Description="3 משתמשים בעלי תפקיד תלמיד במערכת לדוגמה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מורים"
+                        Description="2 משתמשים בעלי תפקיד מורה במערכת לדוגמה." />
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <InfoCard
+                        Title="מנהלים"
+                        Description="משתמש אחד בעל תפקיד מנהל במערכת לדוגמה." />
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: טבלת משתמשים לדוגמה. *@
+    @* העמודות מבוססות על השדות UserID, Username, Email ו-IsActive. *@
+    @* התפקיד של כל משתמש מתקבל בתכנון מטבלת Roles באמצעות RoleID. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <h2 class="fw-bold mb-4">
+                רשימת משתמשים
+            </h2>
+
+            <div class="bg-white border rounded-4 shadow-sm p-4">
+
+                @* גלילה אופקית מאפשרת צפייה בטבלה גם במסכים קטנים. *@
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">מספר משתמש</th>
+                                <th scope="col">שם משתמש</th>
+                                <th scope="col">דוא"ל</th>
+                                <th scope="col">תפקיד</th>
+                                <th scope="col">מצב חשבון</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>student1</td>
+                                <td>student1@example.com</td>
+                                <td>תלמיד</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        פעיל
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>2</td>
+                                <td>student2</td>
+                                <td>student2@example.com</td>
+                                <td>תלמיד</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        פעיל
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>3</td>
+                                <td>student3</td>
+                                <td>student3@example.com</td>
+                                <td>תלמיד</td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        לא פעיל
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>4</td>
+                                <td>teacher1</td>
+                                <td>teacher1@example.com</td>
+                                <td>מורה</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        פעיל
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>5</td>
+                                <td>teacher2</td>
+                                <td>teacher2@example.com</td>
+                                <td>מורה</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        פעיל
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>6</td>
+                                <td>admin1</td>
+                                <td>admin1@example.com</td>
+                                <td>מנהל</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        פעיל
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    @* V9: אזור מידע על אפשרויות ניהול עתידיות. *@
+    <section class="pb-5">
+        <div class="container">
+
+            <div class="bg-white border rounded-4 p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    ניהול חשבונות במערכת
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    בהמשך ניתן יהיה לנהל משתמשים,
+                    לעדכן את פרטיהם ולשנות את מצב החשבון שלהם.
+                </p>
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@code {
+    // V8: בדיקת התחברות והרשאות לפני הצגת הדף.
+    protected override void OnInitialized()
+    {
+        // משתמש שלא התחבר מועבר לדף ההתחברות.
+        if (!Session.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // משתמש מחובר שאינו מנהל מועבר לדף "אין הרשאה".
+        if (Session.RoleName != "Admin")
+        {
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}
